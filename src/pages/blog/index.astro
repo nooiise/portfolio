@@ -1,0 +1,61 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar';
+import { getCollection } from 'astro:content';
+
+export const prerender = true;
+
+const posts = (await getCollection('blog')) || [];
+posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// We'll use a fixed height for the navbar or simulate scroll state
+const clientWindowHeight = 101; 
+---
+
+<Layout title="noise | Blog">
+    <div class="flex min-h-screen flex-col bg-white">
+        <Navbar client:load clientWindowHeight={clientWindowHeight} />
+        <main class="flex-1 pt-32 px-8 md:px-32 max-w-7xl mx-auto w-full">
+            <h1 class="text-5xl font-bold mb-12 font-ranade">Blog</h1>
+            
+            {posts.length > 0 ? (
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-16">
+                    {posts.map((post) => (
+                        <a href={`/blog/${post.id}/`} class="group block border border-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-shadow bg-white">
+                            {post.data.heroImage && (
+                                <div class="h-48 overflow-hidden">
+                                    <img 
+                                        src={post.data.heroImage} 
+                                        alt="" 
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                            )}
+                            <div class="p-6">
+                                <h2 class="text-2xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
+                                    {post.data.title.split(/(_[^_]+_)/g).map(part => (
+                                        part.startsWith('_') && part.endsWith('_') ? 
+                                        <span class="font-baskerville lowercase font-normal">{part.slice(1, -1)}</span> : 
+                                        part
+                                    ))}
+                                </h2>
+                                <p class="text-gray-500 text-sm mb-4">
+                                    {post.data.pubDate.toLocaleDateString('en-us', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                    })}
+                                </p>
+                                <p class="text-gray-700 line-clamp-3">{post.data.description}</p>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+            ) : (
+                <div class="flex flex-col items-center justify-center py-20 text-center">
+                    <p class="text-xl text-gray-500 font-light">Soon you will find my latest research and thoughts here.</p>
+                </div>
+            )}
+        </main>
+    </div>
+</Layout>

@@ -1,0 +1,34 @@
+{
+  "projects": [
+    {
+      "id": 0,
+      "title": "Burak",
+      "link": "https://burak.ar",
+      "hex": "#FFCB05",
+      "imageUrl": "https://i.imgur.com/i0I7pxx.png",
+      "imageSMUrl": "https://i.imgur.com/i0I7pxx.png",
+      "smallImageUrl": "https://i.imgur.com/i0I7pxx.png",
+      "techStack": "NextJS, MongoDB, TailwindCSS & TypeScript"
+    },
+    {
+      "id": 1,
+      "title": "Flower Power",
+      "link": "https://flowerpower.ar",
+      "hex": "#D5C6AD",
+      "imageUrl": "https://i.imgur.com/PwylgfM.png",
+      "imageSMUrl": "https://i.imgur.com/O3Yx9Wj.png",
+      "smallImageUrl": "https://i.imgur.com/VoSQMKU.png",
+      "techStack": "HTML, CSS & JavaScript"
+    },
+    {
+      "id": 2,
+      "title": "Valgraph",
+      "link": "http://valgraph.com.ar/",
+      "imageUrl": "https://i.imgur.com/ADp2eik.png",
+      "imageSMUrl": "https://i.imgur.com/wwNMJav.png",
+      "hex": "#ED1B23",
+      "smallImageUrl": "https://i.imgur.com/ADp2eik.png",
+      "techStack": "HTML, CSS & JavaScript"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content } = await render(post);
+const clientWindowHeight = 101; 
+
+const titleParts = post.data.title.split(/(_[^_]+_)/g);
+const cleanTitle = post.data.title.replace(/_/g, '');
+---
+
+<Layout 
+    title={`noise | ${cleanTitle}`} 
+    description={post.data.description}
+    image={post.data.heroImage}
+>
+    <div class="flex min-h-screen flex-col bg-white">
+        <Navbar client:load clientWindowHeight={clientWindowHeight} />
+        <main class="flex-1 pt-32 px-8 md:px-20 max-w-6xl mx-auto w-full">
+            <article class="pb-16">
+                <div class="mb-12">
+                    {post.data.heroImage && (
+                        <div class="h-[500px] w-full overflow-hidden rounded-3xl mb-12 shadow-xl">
+                            <img 
+                                src={post.data.heroImage} 
+                                alt="" 
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
+                    <div class="flex items-center gap-2 text-gray-500 mb-4">
+                        <time datetime={post.data.pubDate.toISOString()}>
+                            {post.data.pubDate.toLocaleDateString('en-us', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })}
+                        </time>
+                        {post.data.updatedDate && (
+                            <div class="italic">
+                                (Updated on {post.data.updatedDate.toLocaleDateString()})
+                            </div>
+                        )}
+                    </div>
+                    <h1 class="text-5xl font-bold mb-4 font-ranade leading-tight">
+                        {titleParts.map(part => (
+                            part.startsWith('_') && part.endsWith('_') ? 
+                            <span class="font-baskerville lowercase">{part.slice(1, -1)}</span> : 
+                            part
+                        ))}
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8">{post.data.description}</p>
+                    <hr class="border-gray-100" />
+                </div>
+                <div class="prose prose-lg max-w-none prose-img:rounded-xl prose-headings:font-bold prose-headings:font-ranade prose-a:text-blue-600">
+                    <Content />
+                </div>
+            </article>
+            <div class="py-8 border-t border-gray-100 mb-16">
+                <a href="/blog" class="text-blue-600 hover:underline flex items-center gap-2">
+                    ← Back to blog
+                </a>
+            </div>
+        </main>
+    </div>
+</Layout>
